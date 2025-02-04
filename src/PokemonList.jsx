@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const PokemonList = () => {
+const PokemonList = (props) => {
   const [ allPokemon, setAllPokemon ] = useState([]);
   
   useEffect(() => {
@@ -16,11 +16,24 @@ const PokemonList = () => {
     getPokemon();
   }, []);
 
+  const getPokemonDetails = async(pokemonDetailsUrl) => {
+    const response = await fetch(pokemonDetailsUrl);
+    const retrievedPokemonDetails = await response.json();
+    props.setSinglePokemonDetails(retrievedPokemonDetails);
+  }
+
   return (
     <ol>
       {
         allPokemon.map(({ name, url }) => {
-          return <li key={url} >{name}</li>
+          return (
+            <li 
+              key={url} 
+              onClick={() => { getPokemonDetails(url) }} 
+            >
+              {name}
+            </li>
+          )
         })
       }
     </ol>
